@@ -8,7 +8,7 @@ export default function App() {
       <Text style={styles.title}>To start, enter your annual income</Text>
       <TextInput style={styles.input}>$50'000</TextInput>
       <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>Start working</Text>
+        <Text style={styles.buttonText}>Start working!</Text>
       </TouchableOpacity>
     </View>
   );
