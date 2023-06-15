@@ -1,11 +1,11 @@
 import { FC } from "react";
-import { StyleSheet, Alert, TextInput, View } from "react-native";
-
-import Title from "../../components/Title/Title";
-import Button from "../../components/Button/Button";
+import { StyleSheet, Alert, TextInput } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../redux/store";
 import { setIncomeValue } from "../../redux/incomeSlice";
+
+import Title from "../../components/Title/Title";
+import Button from "../../components/Button/Button";
 
 const Auth: FC = () => {
   const income = useSelector((state: RootState) => state.income);
