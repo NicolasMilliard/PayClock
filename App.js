@@ -1,16 +1,42 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { StyleSheet, Alert, TextInput, View } from "react-native";
+import { Provider, useSelector, useDispatch } from "react-redux";
+import store, { setInputValue } from "./src/redux/store";
 
+import Title from "./src/components/Title/Title";
 import Button from "./src/components/Button/Button";
 
 export default function App() {
+  const inputValue = useSelector((state) => state.input.value);
+  const dispatch = useDispatch();
+
+  const handleAnnualIncome = () => {
+    if (inputValue === "") {
+      Alert.alert("Annual Income", "Please provide your annual income", [{ text: "OK" }]);
+    } else {
+      Alert.alert("Annual Income", `The value is ${inputValue}`, [{ text: "OK" }]);
+    }
+  };
+
   return (
-    <View style={styles.container}>
-      <StatusBar style="auto" />
-      <Text style={styles.title}>To start, enter your annual income</Text>
-      <TextInput style={styles.input}>$50'000</TextInput>
-      <Button text="Start working" imageSource={require("./assets/icons/button/start.png")} />
-    </View>
+    <Provider store={store}>
+      <View style={styles.container}>
+        <StatusBar style="auto" />
+        <Title text="To start, enter your annual income" />
+        <TextInput
+          style={styles.input}
+          placeholder="$50000"
+          keyboardType="numbers-and-punctuation"
+          textAlign="center"
+          onChangeText={(text) => dispatch(setInputValue(text))}
+        />
+        <Button
+          text="Start working"
+          imageSource={require("./assets/icons/button/start.png")}
+          customFunc={handleAnnualIncome}
+        />
+      </View>
+    </Provider>
   );
 }
 
@@ -21,13 +47,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  title: {
-    fontSize: 36,
-    marginBottom: 32,
-    color: "#23262e",
-  },
   input: {
     backgroundColor: "#cfe5eb",
+    fontSize: 20,
     color: "#23262e",
     borderRadius: 16,
     paddingTop: 16,
