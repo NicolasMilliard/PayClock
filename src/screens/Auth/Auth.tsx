@@ -1,7 +1,6 @@
 import { FC, useState } from "react";
 import { StyleSheet, Alert, TextInput } from "react-native";
-import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "../../redux/store";
+import { useDispatch } from "react-redux";
 import { setIncomeValue } from "../../redux/incomeSlice";
 
 import Title from "../../components/Title/Title";
@@ -9,7 +8,6 @@ import Button from "../../components/Button/Button";
 
 const Auth: FC = () => {
   const [inputValue, setInputValue] = useState("");
-  const income = useSelector((state: RootState) => state.income);
   const dispatch = useDispatch();
 
   const updateIncomeValue = (text: string) => {
