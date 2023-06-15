@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { StyleSheet, Alert, TextInput } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../redux/store";
@@ -8,6 +8,7 @@ import Title from "../../components/Title/Title";
 import Button from "../../components/Button/Button";
 
 const Auth: FC = () => {
+  const [inputValue, setInputValue] = useState("");
   const income = useSelector((state: RootState) => state.income);
   const dispatch = useDispatch();
 
@@ -20,10 +21,10 @@ const Auth: FC = () => {
   };
 
   const handleAnnualIncome = () => {
-    if (income.value === 0) {
+    if (inputValue === "") {
       Alert.alert("Annual Income", "Please provide your annual income", [{ text: "OK" }]);
     } else {
-      Alert.alert("Annual Income", `The value is $${income.value}`, [{ text: "OK" }]);
+      updateIncomeValue(inputValue);
     }
   };
 
@@ -35,7 +36,7 @@ const Auth: FC = () => {
         placeholder="$50000"
         keyboardType="numbers-and-punctuation"
         textAlign="center"
-        onChangeText={(text) => updateIncomeValue(text)}
+        onChangeText={setInputValue}
       />
       <Button
         text="Start working"
