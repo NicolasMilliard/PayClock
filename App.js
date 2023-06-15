@@ -1,5 +1,7 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TextInput, View } from "react-native";
+
+import Button from "./src/components/Button/Button";
 
 export default function App() {
   return (
@@ -7,9 +9,7 @@ export default function App() {
       <StatusBar style="auto" />
       <Text style={styles.title}>To start, enter your annual income</Text>
       <TextInput style={styles.input}>$50'000</TextInput>
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>Start working</Text>
-      </TouchableOpacity>
+      <Button text="Start working" imageSource={require("./assets/icons/button/start.png")} />
     </View>
   );
 }
@@ -34,17 +34,5 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
     paddingLeft: 40,
     paddingRight: 40,
-  },
-  button: {
-    backgroundColor: "#23262e",
-    borderRadius: 16,
-    marginTop: 80,
-    paddingTop: 16,
-    paddingBottom: 16,
-    paddingLeft: 40,
-    paddingRight: 40,
-  },
-  buttonText: {
-    color: "#dceaee",
   },
 });
