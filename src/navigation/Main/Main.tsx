@@ -2,8 +2,8 @@ import { FC } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 
-import Auth from "../../screens/Auth/Auth";
-import Home from "../../screens/Home/Home";
+import Auth from "../../navigation/Auth/Auth";
+import Home from "../../navigation/Home/Home";
 
 const Main: FC = () => {
   const income = useSelector((state: RootState) => state.income);
