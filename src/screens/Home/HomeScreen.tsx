@@ -23,7 +23,7 @@ const HomeScreen: FC = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Title text="Let’s start a new working day!" />
+      <Title text="Let's start a new working day!" />
       <Button
         text="Start working"
         imageSource={require("../../../assets/icons/button/start.png")}
