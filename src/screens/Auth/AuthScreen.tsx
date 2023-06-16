@@ -1,12 +1,13 @@
 import { FC, useState } from "react";
-import { StyleSheet, Alert, TextInput } from "react-native";
+import { StyleSheet, SafeAreaView, Alert, TextInput } from "react-native";
 import { useDispatch } from "react-redux";
 import { setIncomeValue } from "../../redux/incomeSlice";
+import styles from "../../styles/index";
 
 import Title from "../../components/Title/Title";
 import Button from "../../components/Button/Button";
 
-const Auth: FC = () => {
+const AuthScreen: FC = () => {
   const [inputValue, setInputValue] = useState("");
   const dispatch = useDispatch();
 
@@ -27,10 +28,10 @@ const Auth: FC = () => {
   };
 
   return (
-    <>
+    <SafeAreaView style={styles.container}>
       <Title text="To start, enter your annual income" />
       <TextInput
-        style={styles.input}
+        style={localStyles.input}
         placeholder="$50000"
         keyboardType="numbers-and-punctuation"
         textAlign="center"
@@ -41,11 +42,11 @@ const Auth: FC = () => {
         imageSource={require("../../../assets/icons/button/start.png")}
         customFunc={handleAnnualIncome}
       />
-    </>
+    </SafeAreaView>
   );
 };
 
-const styles = StyleSheet.create({
+const localStyles = StyleSheet.create({
   input: {
     backgroundColor: "#cfe5eb",
     fontSize: 20,
@@ -58,4 +59,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Auth;
+export default AuthScreen;
