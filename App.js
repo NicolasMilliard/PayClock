@@ -1,5 +1,4 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, SafeAreaView } from "react-native";
 // Redux
 import { Provider as ReduxProvider } from "react-redux";
 import store from "./src/redux/store";
