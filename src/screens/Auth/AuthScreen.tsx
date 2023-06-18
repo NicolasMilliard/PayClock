@@ -1,5 +1,5 @@
 import { FC, useState } from "react";
-import { StyleSheet, SafeAreaView, Alert, TextInput } from "react-native";
+import { StyleSheet, SafeAreaView, View, Alert, TextInput } from "react-native";
 import { useDispatch } from "react-redux";
 import { setIncomeValue } from "../../redux/incomeSlice";
 import styles from "../../styles/index";
@@ -37,16 +37,21 @@ const AuthScreen: FC = () => {
         textAlign="center"
         onChangeText={setInputValue}
       />
-      <Button
-        text="Start working"
-        imageSource={require("../../../assets/icons/button/start.png")}
-        customFunc={handleAnnualIncome}
-      />
+      <View style={localStyles.buttonWrapper}>
+        <Button
+          text="Start working"
+          imageSource={require("../../../assets/icons/button/start.png")}
+          customFunc={handleAnnualIncome}
+        />
+      </View>
     </SafeAreaView>
   );
 };
 
 const localStyles = StyleSheet.create({
+  buttonWrapper: {
+    marginTop: 80,
+  },
   input: {
     backgroundColor: "#cfe5eb",
     fontSize: 20,

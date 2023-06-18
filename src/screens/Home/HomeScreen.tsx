@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { SafeAreaView } from "react-native";
+import { StyleSheet, SafeAreaView, View } from "react-native";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
@@ -24,13 +24,21 @@ const HomeScreen: FC = () => {
   return (
     <SafeAreaView style={styles.container}>
       <Title text="Let's start a new working day!" />
-      <Button
-        text="Start working"
-        imageSource={require("../../../assets/icons/button/start.png")}
-        customFunc={handleAnnualIncome}
-      />
+      <View style={localStyles.buttonWrapper}>
+        <Button
+          text="Start working"
+          imageSource={require("../../../assets/icons/button/start.png")}
+          customFunc={handleAnnualIncome}
+        />
+      </View>
     </SafeAreaView>
   );
 };
+
+const localStyles = StyleSheet.create({
+  buttonWrapper: {
+    marginTop: 80,
+  },
+});
 
 export default HomeScreen;
