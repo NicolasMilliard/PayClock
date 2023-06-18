@@ -1,5 +1,5 @@
-import { FC, useEffect, useState } from "react";
-import { StyleSheet, SafeAreaView, View, Text } from "react-native";
+import { FC, useEffect, useState, useRef, MutableRefObject } from "react";
+import { StyleSheet, SafeAreaView, View, Text, TouchableOpacity, Image } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../redux/store";
 import { setStartTimerValue } from "../../redux/startTimerSlice";
@@ -8,13 +8,16 @@ import styles from "../../styles/index";
 import Button from "../../components/Button/Button";
 
 const TimerScreen: FC = () => {
-  const income = useSelector((state: RootState) => state.income);
-  const startTime = useSelector((state: RootState) => state.startTimer);
+  const income = useSelector(({ income }: RootState) => income);
+  const startTimer = useSelector(({ startTimer }: RootState) => startTimer);
   const dispatch = useDispatch();
 
-  const [incomePerSecond, setIncomePerSecond] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const [earned, setEarned] = useState(0);
+  const [incomePerSecond, setIncomePerSecond] = useState<number>(0);
+  const [duration, setDuration] = useState<number>(0);
+  const [earned, setEarned] = useState<number>(0);
+  const [isPaused, setIsPaused] = useState<boolean>(false);
+  const intervalRef: MutableRefObject<number | null> = useRef<number | null>(null);
+  const elapsedDurationRef = useRef<number>(0);
 
   const formatIncome = () => {
     const yearlyIncomeToIncomePerSecond = income.value / (52 * 35 * 3600);
@@ -22,7 +25,7 @@ const TimerScreen: FC = () => {
     setIncomePerSecond(roundIncomePerSecond);
   };
 
-  const formatDuration = (duration: number) => {
+  const formatDuration = (duration: number): string => {
     const hours = Math.floor(duration / 3600);
     const minutes = Math.floor((duration % 3600) / 60);
     const seconds = Math.floor(duration % 60);
@@ -31,33 +34,83 @@ const TimerScreen: FC = () => {
       .padStart(2, "0")}`;
   };
 
+  const pauseTimer = () => {
+    setIsPaused(true);
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+  };
+
+  const reStartTimer = () => {
+    setIsPaused(false);
+    elapsedDurationRef.current = duration;
+    dispatch(setStartTimerValue(Date.now()));
+  };
+
   useEffect(() => {
-    if (startTime.value === 0) {
+    if (startTimer.value === 0) {
       dispatch(setStartTimerValue(Date.now()));
+    } else if (!isPaused) {
+      elapsedDurationRef.current = duration;
     }
     formatIncome();
   }, []);
 
+  const resetTimer = () => {
+    setIsPaused(true);
+    setDuration(0);
+    setEarned(0);
+    dispatch(setStartTimerValue(0));
+  };
+
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      const elapsedSeconds = Math.floor((Date.now() - startTime.value) / 1000);
-      setDuration(elapsedSeconds);
-      setEarned((prevEarned) => prevEarned + incomePerSecond);
-    }, 1000);
-    return () => clearInterval(intervalId);
-  }, [incomePerSecond]);
+    if (!isPaused) {
+      intervalRef.current = setInterval(() => {
+        setDuration((prevDuration) => prevDuration + 1);
+        setEarned((prevEarned) => prevEarned + incomePerSecond);
+      }, 1000);
+    }
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
+  }, [isPaused, incomePerSecond]);
 
   return (
     <SafeAreaView style={styles.container}>
+      {isPaused && (
+        <View style={localStyles.pausedWrapper}>
+          <Text style={localStyles.pausedTitle}>Timer is paused.</Text>
+        </View>
+      )}
       <View>
         <Text style={localStyles.text}>You've been working for</Text>
-        <Text style={localStyles.title}>{formatDuration(duration)}</Text>
+        <Text style={[localStyles.title, isPaused && localStyles.pausedText]}>{formatDuration(duration)}</Text>
       </View>
       <View style={localStyles.wrapper}>
         <Text style={localStyles.text}>So far, you've earned</Text>
-        <Text style={localStyles.title}>${earned.toFixed(2)}</Text>
+        <Text style={[localStyles.title, isPaused && localStyles.pausedText]}>${earned.toFixed(2)}</Text>
       </View>
-      <Button text="Pause" imageSource={require("../../../assets/icons/button/pause.png")} customFunc="" />
+      <View style={localStyles.buttonsWrapper}>
+        {isPaused ? (
+          <Button
+            text="Resume"
+            imageSource={require("../../../assets/icons/button/resume.png")}
+            customFunc={reStartTimer}
+          />
+        ) : (
+          <Button
+            text="Pause"
+            imageSource={require("../../../assets/icons/button/pause.png")}
+            customFunc={pauseTimer}
+          />
+        )}
+        <TouchableOpacity style={localStyles.button} onPress={resetTimer}>
+          <Image source={require("../../../assets/icons/button/reset.png")} />
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 };
@@ -76,6 +129,32 @@ const localStyles = StyleSheet.create({
     fontSize: 36,
     fontWeight: "bold",
     textAlign: "center",
+  },
+  pausedText: {
+    color: "#96abb1",
+  },
+  pausedWrapper: {
+    marginBottom: 32,
+  },
+  pausedTitle: {
+    color: "#23262e",
+    fontSize: 24,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  buttonsWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 12,
+    marginTop: 80,
+  },
+  button: {
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#cfe5eb",
+    borderRadius: 16,
+    width: 60,
+    height: 60,
   },
 });
 
