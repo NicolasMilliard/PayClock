@@ -2,12 +2,17 @@ import { FC, useState } from "react";
 import { StyleSheet, SafeAreaView, View, Alert, TextInput } from "react-native";
 import { useDispatch } from "react-redux";
 import { setIncomeValue } from "../../redux/incomeSlice";
+import { useNavigation, NavigationProp } from "@react-navigation/native";
 import styles from "../../styles/index";
 
-import Title from "../../components/Title/Title";
-import Button from "../../components/Button/Button";
+import MainTitle from "../../components/Titles/MainTitle/MainTitle";
+import Button from "../../components/Buttons/Button/Button";
+
+// Define the type for the navigation prop
+type TimerScreenNavigationProp = NavigationProp<{ Timer: undefined }>;
 
 const AuthScreen: FC = () => {
+  const navigation = useNavigation<TimerScreenNavigationProp>();
   const [inputValue, setInputValue] = useState("");
   const dispatch = useDispatch();
 
@@ -16,6 +21,7 @@ const AuthScreen: FC = () => {
 
     if (!isNaN(parsedValue)) {
       dispatch(setIncomeValue(parsedValue));
+      navigation.navigate("Timer");
     }
   };
 
@@ -29,7 +35,7 @@ const AuthScreen: FC = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Title text="To start, enter your annual income" />
+      <MainTitle text="To start, enter your annual income" />
       <TextInput
         style={localStyles.input}
         placeholder="$50000"
@@ -40,7 +46,7 @@ const AuthScreen: FC = () => {
       <View style={localStyles.buttonWrapper}>
         <Button
           text="Start working"
-          imageSource={require("../../../assets/icons/button/start.png")}
+          imageSource={require("../../../assets/icons/button/start/start.png")}
           customFunc={handleAnnualIncome}
         />
       </View>
