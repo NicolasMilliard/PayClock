@@ -7,8 +7,8 @@ interface Props {
   text: string;
 }
 
-const Title: FC<Props> = ({ text }) => {
+const MainTitle: FC<Props> = ({ text }) => {
   return <Text style={styles.title}>{text}</Text>;
 };
 
-export default Title;
+export default MainTitle;

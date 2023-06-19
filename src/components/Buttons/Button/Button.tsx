@@ -7,7 +7,7 @@ import styles from "./styles";
 interface Props {
   text: string;
   imageSource: ImageSourcePropType;
-  customFunc: any;
+  customFunc: () => void;
 }
 
 const Button: FC<Props> = ({ text, imageSource, customFunc }) => {
