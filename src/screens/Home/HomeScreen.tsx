@@ -5,8 +5,8 @@ import { RootState } from "../../redux/store";
 import { useNavigation, NavigationProp } from "@react-navigation/native";
 import styles from "../../styles/index";
 
-import Title from "../../components/Title/Title";
-import Button from "../../components/Button/Button";
+import MainTitle from "../../components/Titles/MainTitle/MainTitle";
+import Button from "../../components/Buttons/Button/Button";
 
 // Define the type for the navigation prop
 type TimerScreenNavigationProp = NavigationProp<{ Timer: undefined }>;
@@ -23,11 +23,11 @@ const HomeScreen: FC = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Title text="Let's start a new working day!" />
+      <MainTitle text="Let's start a new working day!" />
       <View style={localStyles.buttonWrapper}>
         <Button
           text="Start working"
-          imageSource={require("../../../assets/icons/button/start.png")}
+          imageSource={require("../../../assets/icons/button/start/start.png")}
           customFunc={handleAnnualIncome}
         />
       </View>
