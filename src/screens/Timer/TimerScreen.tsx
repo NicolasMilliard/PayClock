@@ -1,39 +1,66 @@
 import { FC, useEffect, useState, useRef, MutableRefObject } from "react";
-import { StyleSheet, SafeAreaView, View, Text, TouchableOpacity, Image } from "react-native";
+import { AppState, StyleSheet, SafeAreaView, View, Text } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../redux/store";
 import { setStartTimerValue } from "../../redux/startTimerSlice";
+import { formatIncome, formatDuration } from "../../utils/Timer";
 import styles from "../../styles/index";
 
-import Button from "../../components/Button/Button";
+import Button from "../../components/Buttons/Button/Button";
+import ResetButton from "../../components/Buttons/ResetButton/ResetButton";
+import SecondaryTitle from "../../components/Titles/SecondaryTitle/SecondaryTitle";
+import PausedTitle from "../../components/Titles/PausedTitle/PausedTitle";
 
 const TimerScreen: FC = () => {
   const income = useSelector(({ income }: RootState) => income);
   const startTimer = useSelector(({ startTimer }: RootState) => startTimer);
   const dispatch = useDispatch();
 
+  // References
+  const appState = useRef(AppState.currentState);
+  const intervalRef: MutableRefObject<number | null> = useRef<number | null>(null);
+  // State variables
   const [incomePerSecond, setIncomePerSecond] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
-  const [earned, setEarned] = useState<number>(0);
+  const [backgroundStartTimer, setBackgroundStartTimer] = useState<number>(0);
   const [isPaused, setIsPaused] = useState<boolean>(false);
-  const intervalRef: MutableRefObject<number | null> = useRef<number | null>(null);
-  const elapsedDurationRef = useRef<number>(0);
+  const [earned, setEarned] = useState<number>(0);
 
-  const formatIncome = () => {
-    const yearlyIncomeToIncomePerSecond = income.value / (52 * 35 * 3600);
-    const roundIncomePerSecond = (yearlyIncomeToIncomePerSecond * 100) / 100;
-    setIncomePerSecond(roundIncomePerSecond);
-  };
+  useEffect(() => {
+    // Check if it's the first start
+    if (startTimer.value === 0) {
+      dispatch(setStartTimerValue(Date.now()));
+    }
 
-  const formatDuration = (duration: number): string => {
-    const hours = Math.floor(duration / 3600);
-    const minutes = Math.floor((duration % 3600) / 60);
-    const seconds = Math.floor(duration % 60);
-    return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${seconds
-      .toString()
-      .padStart(2, "0")}`;
-  };
+    // Attribute the income to incomePerSecond
+    setIncomePerSecond(formatIncome(income.value));
 
+    // If the timer is not paused
+    if (!isPaused) {
+      // App state change event listener
+      const subscription = AppState.addEventListener("change", (nextAppState) => {
+        if (appState.current.match(/active/) && (nextAppState === "inactive" || nextAppState === "background")) {
+          // App is active and will be inactive or background
+          const currentDate = Date.now();
+          setBackgroundStartTimer(currentDate);
+        } else if (appState.current.match(/background|inactive/) && nextAppState === "active") {
+          // App is background and will be active
+          const backgroundDurationInSeconds = (Date.now() - backgroundStartTimer) / 1000;
+          setDuration((prevDuration) => prevDuration + backgroundDurationInSeconds);
+          setEarned((prevEarned) => prevEarned + incomePerSecond * backgroundDurationInSeconds);
+          setBackgroundStartTimer(0);
+        }
+        appState.current = nextAppState;
+      });
+
+      return () => {
+        // Cleanup the event listener
+        subscription.remove();
+      };
+    }
+  }, [backgroundStartTimer]);
+
+  // To pause the timer, interval is cleared
   const pauseTimer = () => {
     setIsPaused(true);
     if (intervalRef.current) {
@@ -41,29 +68,15 @@ const TimerScreen: FC = () => {
     }
   };
 
-  const reStartTimer = () => {
-    setIsPaused(false);
-    elapsedDurationRef.current = duration;
+  // Reset keep isPaused status
+  const resetTimer = () => {
+    setDuration(0);
+    setEarned(0);
     dispatch(setStartTimerValue(Date.now()));
   };
 
   useEffect(() => {
-    if (startTimer.value === 0) {
-      dispatch(setStartTimerValue(Date.now()));
-    } else if (!isPaused) {
-      elapsedDurationRef.current = duration;
-    }
-    formatIncome();
-  }, []);
-
-  const resetTimer = () => {
-    setIsPaused(true);
-    setDuration(0);
-    setEarned(0);
-    dispatch(setStartTimerValue(0));
-  };
-
-  useEffect(() => {
+    // Run the timer (update duration and earned) when isPaused is false
     if (!isPaused) {
       intervalRef.current = setInterval(() => {
         setDuration((prevDuration) => prevDuration + 1);
@@ -82,34 +95,32 @@ const TimerScreen: FC = () => {
     <SafeAreaView style={styles.container}>
       {isPaused && (
         <View style={localStyles.pausedWrapper}>
-          <Text style={localStyles.pausedTitle}>Timer is paused.</Text>
+          <PausedTitle text="Timer is paused." />
         </View>
       )}
       <View>
         <Text style={localStyles.text}>You've been working for</Text>
-        <Text style={[localStyles.title, isPaused && localStyles.pausedText]}>{formatDuration(duration)}</Text>
+        <SecondaryTitle text={formatDuration(duration)} isPaused={isPaused} />
       </View>
       <View style={localStyles.wrapper}>
         <Text style={localStyles.text}>So far, you've earned</Text>
-        <Text style={[localStyles.title, isPaused && localStyles.pausedText]}>${earned.toFixed(2)}</Text>
+        <SecondaryTitle text={`$${earned.toFixed(2)}`} isPaused={isPaused} />
       </View>
       <View style={localStyles.buttonsWrapper}>
         {isPaused ? (
           <Button
             text="Resume"
-            imageSource={require("../../../assets/icons/button/resume.png")}
-            customFunc={reStartTimer}
+            imageSource={require("../../../assets/icons/button/resume/resume.png")}
+            customFunc={() => setIsPaused(false)}
           />
         ) : (
           <Button
             text="Pause"
-            imageSource={require("../../../assets/icons/button/pause.png")}
+            imageSource={require("../../../assets/icons/button/pause/pause.png")}
             customFunc={pauseTimer}
           />
         )}
-        <TouchableOpacity style={localStyles.button} onPress={resetTimer}>
-          <Image source={require("../../../assets/icons/button/reset.png")} />
-        </TouchableOpacity>
+        <ResetButton customFunc={resetTimer} />
       </View>
     </SafeAreaView>
   );
@@ -124,37 +135,14 @@ const localStyles = StyleSheet.create({
     fontSize: 16,
     textAlign: "center",
   },
-  title: {
-    color: "#23262e",
-    fontSize: 36,
-    fontWeight: "bold",
-    textAlign: "center",
-  },
-  pausedText: {
-    color: "#96abb1",
-  },
   pausedWrapper: {
     marginBottom: 32,
-  },
-  pausedTitle: {
-    color: "#23262e",
-    fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "center",
   },
   buttonsWrapper: {
     flexDirection: "row",
     alignItems: "center",
     gap: 12,
     marginTop: 80,
-  },
-  button: {
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "#cfe5eb",
-    borderRadius: 16,
-    width: 60,
-    height: 60,
   },
 });
 
