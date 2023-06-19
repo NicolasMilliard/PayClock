@@ -6,13 +6,16 @@ export type Income = {
 
 const initialState: Income = {
     value: 0,
-}
+};
 
-const incomeSlice = createSlice({name: "income", initialState: initialState, reducers: {
-    setIncomeValue: (state, action) => {
-        state.value = action.payload;
-    }
-}})
+const incomeSlice = createSlice({
+    name: "income",
+    initialState: initialState,
+    reducers: {
+        setIncomeValue: (state, action) => {
+            state.value = action.payload;
+        }
+}});
 
 export const {setIncomeValue} = incomeSlice.actions;
 
