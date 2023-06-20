@@ -2,18 +2,17 @@ import { FC } from "react";
 import { StyleSheet, SafeAreaView, View } from "react-native";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
-import { useNavigation, NavigationProp } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
+import { type StackNavigation } from "../../../App";
 import styles from "../../styles/index";
 
 import MainTitle from "../../components/Titles/MainTitle/MainTitle";
 import Button from "../../components/Buttons/Button/Button";
-
-// Define the type for the navigation prop
-type TimerScreenNavigationProp = NavigationProp<{ Timer: undefined }>;
+import SecondaryButton from "../../components/Buttons/SecondaryButton/SecondaryButton";
 
 const HomeScreen: FC = () => {
   const income = useSelector((state: RootState) => state.income);
-  const navigation = useNavigation<TimerScreenNavigationProp>();
+  const navigation = useNavigation<StackNavigation>();
 
   const handleAnnualIncome = () => {
     if (income.value > 0) {
@@ -21,9 +20,21 @@ const HomeScreen: FC = () => {
     }
   };
 
+  const navigateToSettings = () => {
+    navigation.navigate("Settings");
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      <MainTitle text="Let's start a new working day!" />
+      <View>
+        <SecondaryButton
+          imageSource={require("../../../assets/icons/button/settings/settings.png")}
+          customFunc={navigateToSettings}
+        />
+      </View>
+      <View style={localStyles.wrapper}>
+        <MainTitle text="Let's start a new working day!" />
+      </View>
       <View style={localStyles.buttonWrapper}>
         <Button
           text="Start working"
@@ -36,6 +47,10 @@ const HomeScreen: FC = () => {
 };
 
 const localStyles = StyleSheet.create({
+  wrapper: {
+    marginLeft: 24,
+    marginRight: 24,
+  },
   buttonWrapper: {
     marginTop: 80,
   },
