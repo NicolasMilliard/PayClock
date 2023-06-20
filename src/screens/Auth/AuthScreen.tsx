@@ -2,17 +2,15 @@ import { FC, useState } from "react";
 import { StyleSheet, SafeAreaView, View, Alert, TextInput } from "react-native";
 import { useDispatch } from "react-redux";
 import { setIncomeValue } from "../../redux/incomeSlice";
-import { useNavigation, NavigationProp } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
+import { type StackNavigation } from "../../../App";
 import styles from "../../styles/index";
 
 import MainTitle from "../../components/Titles/MainTitle/MainTitle";
 import Button from "../../components/Buttons/Button/Button";
 
-// Define the type for the navigation prop
-type TimerScreenNavigationProp = NavigationProp<{ Timer: undefined }>;
-
 const AuthScreen: FC = () => {
-  const navigation = useNavigation<TimerScreenNavigationProp>();
+  const navigation = useNavigation<StackNavigation>();
   const [inputValue, setInputValue] = useState("");
   const dispatch = useDispatch();
 
@@ -37,8 +35,8 @@ const AuthScreen: FC = () => {
     <SafeAreaView style={styles.container}>
       <MainTitle text="To start, enter your annual income" />
       <TextInput
-        style={localStyles.input}
-        placeholder="$50000"
+        style={styles.input}
+        placeholder="50000"
         keyboardType="numbers-and-punctuation"
         textAlign="center"
         onChangeText={setInputValue}
@@ -57,16 +55,6 @@ const AuthScreen: FC = () => {
 const localStyles = StyleSheet.create({
   buttonWrapper: {
     marginTop: 80,
-  },
-  input: {
-    backgroundColor: "#cfe5eb",
-    fontSize: 20,
-    color: "#23262e",
-    borderRadius: 16,
-    paddingTop: 16,
-    paddingBottom: 16,
-    paddingLeft: 40,
-    paddingRight: 40,
   },
 });
 
