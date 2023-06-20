@@ -25,20 +25,20 @@ const HomeScreen: FC = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <View>
+    <SafeAreaView style={styles.centeredContainer}>
+      <View style={localStyles.settingsWrapper}>
         <SecondaryButton
-          imageSource={require("../../../assets/icons/button/settings/settings.png")}
+          imageSource={require("../../../assets/icons/settings/settings.png")}
           customFunc={navigateToSettings}
         />
       </View>
-      <View style={localStyles.wrapper}>
+      <View style={localStyles.titleWrapper}>
         <MainTitle text="Let's start a new working day!" />
       </View>
       <View style={localStyles.buttonWrapper}>
         <Button
           text="Start working"
-          imageSource={require("../../../assets/icons/button/start/start.png")}
+          imageSource={require("../../../assets/icons/start/start.png")}
           customFunc={handleAnnualIncome}
         />
       </View>
@@ -47,7 +47,12 @@ const HomeScreen: FC = () => {
 };
 
 const localStyles = StyleSheet.create({
-  wrapper: {
+  settingsWrapper: {
+    position: "absolute",
+    top: 64,
+    right: 24,
+  },
+  titleWrapper: {
     marginLeft: 24,
     marginRight: 24,
   },
