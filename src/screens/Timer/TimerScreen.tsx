@@ -92,7 +92,7 @@ const TimerScreen: FC = () => {
   }, [isPaused, incomePerSecond]);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.centeredContainer}>
       {isPaused && (
         <View style={localStyles.pausedWrapper}>
           <PausedTitle text="Timer is paused." />
