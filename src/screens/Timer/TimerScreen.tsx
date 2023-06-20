@@ -110,20 +110,13 @@ const TimerScreen: FC = () => {
         {isPaused ? (
           <Button
             text="Resume"
-            imageSource={require("../../../assets/icons/button/resume/resume.png")}
+            imageSource={require("../../../assets/icons/resume/resume.png")}
             customFunc={() => setIsPaused(false)}
           />
         ) : (
-          <Button
-            text="Pause"
-            imageSource={require("../../../assets/icons/button/pause/pause.png")}
-            customFunc={pauseTimer}
-          />
+          <Button text="Pause" imageSource={require("../../../assets/icons/pause/pause.png")} customFunc={pauseTimer} />
         )}
-        <SecondaryButton
-          imageSource={require("../../../assets/icons/button/reset/reset.png")}
-          customFunc={resetTimer}
-        />
+        <SecondaryButton imageSource={require("../../../assets/icons/reset/reset.png")} customFunc={resetTimer} />
       </View>
     </SafeAreaView>
   );

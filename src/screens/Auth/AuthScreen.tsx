@@ -46,7 +46,7 @@ const AuthScreen: FC = () => {
       <View style={localStyles.buttonWrapper}>
         <Button
           text="Start working"
-          imageSource={require("../../../assets/icons/button/start/start.png")}
+          imageSource={require("../../../assets/icons/start/start.png")}
           customFunc={handleAnnualIncome}
         />
       </View>
