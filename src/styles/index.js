@@ -5,6 +5,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#dceaee",
     alignItems: "center",
+  },
+  centeredContainer: {
+    flex: 1,
+    backgroundColor: "#dceaee",
+    alignItems: "center",
     justifyContent: "center",
   },
 });
