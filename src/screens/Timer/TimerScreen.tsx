@@ -7,7 +7,7 @@ import { formatIncome, formatDuration } from "../../utils/Timer";
 import styles from "../../styles/index";
 
 import Button from "../../components/Buttons/Button/Button";
-import ResetButton from "../../components/Buttons/ResetButton/ResetButton";
+import SecondaryButton from "../../components/Buttons/SecondaryButton/SecondaryButton";
 import SecondaryTitle from "../../components/Titles/SecondaryTitle/SecondaryTitle";
 import PausedTitle from "../../components/Titles/PausedTitle/PausedTitle";
 
@@ -120,7 +120,10 @@ const TimerScreen: FC = () => {
             customFunc={pauseTimer}
           />
         )}
-        <ResetButton customFunc={resetTimer} />
+        <SecondaryButton
+          imageSource={require("../../../assets/icons/button/reset/reset.png")}
+          customFunc={resetTimer}
+        />
       </View>
     </SafeAreaView>
   );
