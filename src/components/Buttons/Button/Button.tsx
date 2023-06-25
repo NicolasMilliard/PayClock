@@ -12,9 +12,11 @@ interface Props {
 
 const Button: FC<Props> = ({ text, imageSource, customFunc }) => {
   return (
-    <TouchableOpacity style={styles.button} onPress={customFunc}>
-      <Image source={imageSource} />
-      <Text style={styles.buttonText}>{text}</Text>
+    <TouchableOpacity testID="button" style={styles.button} onPress={customFunc}>
+      <Image testID="button-image" source={imageSource} />
+      <Text testID="button-text" style={styles.buttonText}>
+        {text}
+      </Text>
     </TouchableOpacity>
   );
 };
