@@ -4,11 +4,16 @@ import { Text } from "react-native";
 import styles from "./styles";
 
 interface Props {
+  darkMode: boolean;
   text: string;
 }
 
-const MainTitle: FC<Props> = ({ text }) => {
-  return <Text style={styles.title}>{text}</Text>;
+const MainTitle: FC<Props> = ({ darkMode, text }) => {
+  return (
+    <Text testID="title" style={[styles.title, darkMode ? styles.darkTitle : styles.lightTitle]}>
+      {text}
+    </Text>
+  );
 };
 
 export default MainTitle;
