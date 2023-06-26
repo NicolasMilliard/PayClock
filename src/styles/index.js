@@ -3,11 +3,15 @@ import { StyleSheet } from "react-native";
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  lightContainer: {
     backgroundColor: "#dceaee",
+  },
+  darkContainer: {
+    backgroundColor: "#23262e",
   },
   centeredContainer: {
     flex: 1,
-    backgroundColor: "#dceaee",
     alignItems: "center",
     justifyContent: "center",
   },
@@ -20,6 +24,11 @@ const styles = StyleSheet.create({
     paddingBottom: 16,
     paddingLeft: 40,
     paddingRight: 40,
+  },
+  settingsWrapper: {
+    position: "absolute",
+    top: 64,
+    right: 24,
   },
 });
 
