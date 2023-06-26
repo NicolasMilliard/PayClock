@@ -3,19 +3,21 @@ import { persistStore, persistReducer } from "redux-persist";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import incomeSlice from "./incomeSlice";
 import startTimerSlice from "./startTimerSlice";
+import themeSlice from "./themeSlice";
 
 export type RootState = ReturnType<typeof rootReducer>;
 
 const rootReducer = combineReducers({
     income: incomeSlice,
-    startTimer: startTimerSlice
+    startTimer: startTimerSlice,
+    darkTheme: themeSlice
 });
 
 // Income reducer is persisted
 const persistConfig = {
     key: 'root',
     storage: AsyncStorage,
-    whitelist: ["income"],
+    blacklist: ["startTimer"],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
