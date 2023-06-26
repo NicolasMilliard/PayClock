@@ -32,7 +32,11 @@ const HomeScreen: FC = () => {
       <View style={styles.settingsWrapper}>
         <SecondaryButton
           darkMode={darkMode.value}
-          imageSource={require("../../../assets/icons/settings/settings.png")}
+          imageSource={
+            darkMode.value
+              ? require("../../../assets/images/icons/dark/settings/settings.png")
+              : require("../../../assets/images/icons/light/settings/settings.png")
+          }
           customFunc={navigateToSettings}
         />
       </View>
@@ -43,7 +47,11 @@ const HomeScreen: FC = () => {
         <Button
           darkMode={darkMode.value}
           text="Start working"
-          imageSource={require("../../../assets/icons/start/start.png")}
+          imageSource={
+            darkMode.value
+              ? require("../../../assets/images/icons/dark/start/start.png")
+              : require("../../../assets/images/icons/light/start/start.png")
+          }
           customFunc={handleAnnualIncome}
         />
       </View>

@@ -12,6 +12,7 @@ import Button from "../../components/Buttons/Button/Button";
 import SecondaryButton from "../../components/Buttons/SecondaryButton/SecondaryButton";
 import SecondaryTitle from "../../components/Titles/SecondaryTitle/SecondaryTitle";
 import PausedTitle from "../../components/Titles/PausedTitle/PausedTitle";
+import RegularText from "../../components/Texts/RegularText/RegularText";
 
 const TimerScreen: FC = () => {
   const income = useSelector(({ income }: RootState) => income);
@@ -100,46 +101,64 @@ const TimerScreen: FC = () => {
   }, [isPaused, incomePerSecond]);
 
   return (
-    <SafeAreaView style={styles.centeredContainer}>
+    <SafeAreaView
+      style={[styles.centeredContainer, darkMode.value === false ? styles.lightContainer : styles.darkContainer]}
+    >
       <View style={styles.settingsWrapper}>
         <SecondaryButton
           darkMode={darkMode.value}
-          imageSource={require("../../../assets/icons/settings/settings.png")}
+          imageSource={
+            darkMode.value
+              ? require("../../../assets/images/icons/dark/settings/settings.png")
+              : require("../../../assets/images/icons/light/settings/settings.png")
+          }
           customFunc={navigateToSettings}
         />
       </View>
       {isPaused && (
         <View style={localStyles.pausedWrapper}>
-          <PausedTitle text="Timer is paused." />
+          <PausedTitle darkMode={darkMode.value} text="Timer is paused." />
         </View>
       )}
       <View>
-        <Text style={localStyles.text}>You've been working for</Text>
-        <SecondaryTitle text={formatDuration(duration)} isPaused={isPaused} />
+        <RegularText darkMode={darkMode.value} text="You've been working for" />
+        <SecondaryTitle darkMode={darkMode.value} text={formatDuration(duration)} isPaused={isPaused} />
       </View>
       <View style={localStyles.wrapper}>
-        <Text style={localStyles.text}>So far, you've earned</Text>
-        <SecondaryTitle text={`$${earned.toFixed(2)}`} isPaused={isPaused} />
+        <RegularText darkMode={darkMode.value} text="So far, you've earned" />
+        <SecondaryTitle darkMode={darkMode.value} text={`$${earned.toFixed(2)}`} isPaused={isPaused} />
       </View>
       <View style={localStyles.buttonsWrapper}>
         {isPaused ? (
           <Button
             darkMode={darkMode.value}
             text="Resume"
-            imageSource={require("../../../assets/icons/resume/resume.png")}
+            imageSource={
+              darkMode.value
+                ? require("../../../assets/images/icons/dark/resume/resume.png")
+                : require("../../../assets/images/icons/light/resume/resume.png")
+            }
             customFunc={() => setIsPaused(false)}
           />
         ) : (
           <Button
             darkMode={darkMode.value}
             text="Pause"
-            imageSource={require("../../../assets/icons/pause/pause.png")}
+            imageSource={
+              darkMode.value
+                ? require("../../../assets/images/icons/dark/pause/pause.png")
+                : require("../../../assets/images/icons/light/pause/pause.png")
+            }
             customFunc={pauseTimer}
           />
         )}
         <SecondaryButton
           darkMode={darkMode.value}
-          imageSource={require("../../../assets/icons/reset/reset.png")}
+          imageSource={
+            darkMode.value
+              ? require("../../../assets/images/icons/dark/reset/reset.png")
+              : require("../../../assets/images/icons/light/reset/reset.png")
+          }
           customFunc={resetTimer}
         />
       </View>
@@ -150,11 +169,6 @@ const TimerScreen: FC = () => {
 const localStyles = StyleSheet.create({
   wrapper: {
     marginTop: 64,
-  },
-  text: {
-    color: "#96abb1",
-    fontSize: 16,
-    textAlign: "center",
   },
   pausedWrapper: {
     marginBottom: 32,

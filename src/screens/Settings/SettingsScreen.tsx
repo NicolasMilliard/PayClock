@@ -10,6 +10,7 @@ import styles from "../../styles/index";
 
 import IconTitle from "../../components/Titles/IconTitle/IconTitle";
 import Button from "../../components/Buttons/Button/Button";
+import LabelText from "../../components/Texts/LabelText/LabelText";
 
 const SettingsScreen: FC = () => {
   const income = useSelector(({ income }: RootState) => income);
@@ -43,30 +44,39 @@ const SettingsScreen: FC = () => {
     <SafeAreaView style={[styles.container, darkMode.value === false ? styles.lightContainer : styles.darkContainer]}>
       <IconTitle
         darkMode={darkMode.value}
-        imageSource={require("../../../assets/icons/go_back/go_back.png")}
+        imageSource={
+          darkMode.value
+            ? require("../../../assets/images/icons/dark/go_back/go_back.png")
+            : require("../../../assets/images/icons/light/go_back/go_back.png")
+        }
         customFunc={handleGoBack}
         text="Settings"
       />
       <View style={localStyles.wrapper}>
         {/* Annual income */}
-        <Text style={localStyles.labelText}>Annual income</Text>
+        <LabelText darkMode={darkMode.value} text="Annual income" />
         <TextInput
-          style={styles.input}
+          style={[styles.input, darkMode.value ? styles.darkInput : styles.lightInput]}
           placeholder={income.value.toString()}
+          placeholderTextColor={darkMode.value ? "#676f83" : "#8f96a7"}
           keyboardType="numbers-and-punctuation"
           onChangeText={setInputValue}
         />
       </View>
       <View style={localStyles.wrapper}>
         {/* Theme */}
-        <Text style={localStyles.labelText}>Dark mode</Text>
+        <LabelText darkMode={darkMode.value} text="Dark mode" />
         <Switch value={isDark} onValueChange={toggleSwitch} />
       </View>
       <View style={localStyles.buttonWrapper}>
         <Button
           darkMode={darkMode.value}
           text="Save"
-          imageSource={require("../../../assets/icons/save/save.png")}
+          imageSource={
+            darkMode.value
+              ? require("../../../assets/images/icons/dark/save/save.png")
+              : require("../../../assets/images/icons/light/save/save.png")
+          }
           customFunc={updateIncomeValue}
         />
       </View>
@@ -81,9 +91,6 @@ const localStyles = StyleSheet.create({
     alignItems: "center",
     marginTop: 32,
     marginHorizontal: 24,
-  },
-  labelText: {
-    fontSize: 16,
   },
   buttonWrapper: {
     flexDirection: "row",

@@ -47,7 +47,11 @@ const AuthScreen: FC = () => {
         <Button
           darkMode={darkMode.value}
           text="Start working"
-          imageSource={require("../../../assets/icons/start/start.png")}
+          imageSource={
+            darkMode.value
+              ? require("../../../assets/images/icons/dark/start/start.png")
+              : require("../../../assets/images/icons/light/start/start.png")
+          }
           customFunc={handleAnnualIncome}
         />
       </View>
