@@ -4,12 +4,20 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 36,
     lineHeight: 36 * 1.6,
-    color: "#23262e",
     fontWeight: "bold",
     textAlign: "center",
   },
-  pausedText: {
+  lightTitle: {
+    color: "#23262e",
+  },
+  lightTitlePaused: {
     color: "#96abb1",
+  },
+  darkTitle: {
+    color: "#dceaee",
+  },
+  darkTitlePaused: {
+    color: "#3d424e",
   }
 });
 
