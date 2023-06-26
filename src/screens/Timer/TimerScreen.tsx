@@ -4,6 +4,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../redux/store";
 import { setStartTimerValue } from "../../redux/startTimerSlice";
 import { formatIncome, formatDuration } from "../../utils/Timer";
+import { useNavigation } from "@react-navigation/native";
+import { type StackNavigation } from "../../../App";
 import styles from "../../styles/index";
 
 import Button from "../../components/Buttons/Button/Button";
@@ -14,7 +16,9 @@ import PausedTitle from "../../components/Titles/PausedTitle/PausedTitle";
 const TimerScreen: FC = () => {
   const income = useSelector(({ income }: RootState) => income);
   const startTimer = useSelector(({ startTimer }: RootState) => startTimer);
+  const darkMode = useSelector(({ darkTheme }: RootState) => darkTheme);
   const dispatch = useDispatch();
+  const navigation = useNavigation<StackNavigation>();
 
   // References
   const appState = useRef(AppState.currentState);
@@ -25,6 +29,10 @@ const TimerScreen: FC = () => {
   const [backgroundStartTimer, setBackgroundStartTimer] = useState<number>(0);
   const [isPaused, setIsPaused] = useState<boolean>(false);
   const [earned, setEarned] = useState<number>(0);
+
+  const navigateToSettings = () => {
+    navigation.navigate("Settings");
+  };
 
   useEffect(() => {
     // Check if it's the first start
@@ -93,6 +101,13 @@ const TimerScreen: FC = () => {
 
   return (
     <SafeAreaView style={styles.centeredContainer}>
+      <View style={styles.settingsWrapper}>
+        <SecondaryButton
+          darkMode={darkMode.value}
+          imageSource={require("../../../assets/icons/settings/settings.png")}
+          customFunc={navigateToSettings}
+        />
+      </View>
       {isPaused && (
         <View style={localStyles.pausedWrapper}>
           <PausedTitle text="Timer is paused." />
@@ -109,14 +124,24 @@ const TimerScreen: FC = () => {
       <View style={localStyles.buttonsWrapper}>
         {isPaused ? (
           <Button
+            darkMode={darkMode.value}
             text="Resume"
             imageSource={require("../../../assets/icons/resume/resume.png")}
             customFunc={() => setIsPaused(false)}
           />
         ) : (
-          <Button text="Pause" imageSource={require("../../../assets/icons/pause/pause.png")} customFunc={pauseTimer} />
+          <Button
+            darkMode={darkMode.value}
+            text="Pause"
+            imageSource={require("../../../assets/icons/pause/pause.png")}
+            customFunc={pauseTimer}
+          />
         )}
-        <SecondaryButton imageSource={require("../../../assets/icons/reset/reset.png")} customFunc={resetTimer} />
+        <SecondaryButton
+          darkMode={darkMode.value}
+          imageSource={require("../../../assets/icons/reset/reset.png")}
+          customFunc={resetTimer}
+        />
       </View>
     </SafeAreaView>
   );
