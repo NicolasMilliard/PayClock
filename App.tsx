@@ -1,4 +1,3 @@
-import { StatusBar } from "expo-status-bar";
 // Redux
 import { Provider as ReduxProvider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
@@ -7,6 +6,7 @@ import { store, persistor } from "./src/redux/store";
 import { NavigationContainer, NavigationProp } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
+import CustomStatusBar from "./src/components/CustomStatusBar/CustomStatusBar";
 import Main from "./src/navigation/Main/Main";
 import TimerScreen from "./src/screens/Timer/TimerScreen";
 import SettingsScreen from "./src/screens/Settings/SettingsScreen";
@@ -21,9 +21,9 @@ export default function App() {
 
   return (
     <>
-      <StatusBar style="auto" />
       <ReduxProvider store={store}>
         <PersistGate loading={null} persistor={persistor}>
+          <CustomStatusBar />
           <NavigationContainer>
             <Stack.Navigator>
               <Stack.Screen name="Main" component={Main} options={{ headerShown: false }} />
