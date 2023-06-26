@@ -16,14 +16,20 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   input: {
-    backgroundColor: "#cfe5eb",
     fontSize: 20,
-    color: "#23262e",
     borderRadius: 16,
     paddingTop: 16,
     paddingBottom: 16,
     paddingLeft: 40,
     paddingRight: 40,
+  },
+  lightInput: {
+    backgroundColor: "#cfe5eb",
+    color: "#23262e",
+  },
+  darkInput: {
+    backgroundColor: "#3d424e",
+    color: "#dceaee",
   },
   settingsWrapper: {
     position: "absolute",
