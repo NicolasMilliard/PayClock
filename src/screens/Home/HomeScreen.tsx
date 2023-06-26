@@ -12,6 +12,7 @@ import SecondaryButton from "../../components/Buttons/SecondaryButton/SecondaryB
 
 const HomeScreen: FC = () => {
   const income = useSelector((state: RootState) => state.income);
+  const darkMode = useSelector(({ darkTheme }: RootState) => darkTheme);
   const navigation = useNavigation<StackNavigation>();
 
   const handleAnnualIncome = () => {
@@ -25,18 +26,22 @@ const HomeScreen: FC = () => {
   };
 
   return (
-    <SafeAreaView style={styles.centeredContainer}>
-      <View style={localStyles.settingsWrapper}>
+    <SafeAreaView
+      style={[styles.centeredContainer, darkMode.value === false ? styles.lightContainer : styles.darkContainer]}
+    >
+      <View style={styles.settingsWrapper}>
         <SecondaryButton
+          darkMode={darkMode.value}
           imageSource={require("../../../assets/icons/settings/settings.png")}
           customFunc={navigateToSettings}
         />
       </View>
       <View style={localStyles.titleWrapper}>
-        <MainTitle text="Let's start a new working day!" />
+        <MainTitle darkMode={darkMode.value} text="Let's start a new working day!" />
       </View>
       <View style={localStyles.buttonWrapper}>
         <Button
+          darkMode={darkMode.value}
           text="Start working"
           imageSource={require("../../../assets/icons/start/start.png")}
           customFunc={handleAnnualIncome}
@@ -47,11 +52,6 @@ const HomeScreen: FC = () => {
 };
 
 const localStyles = StyleSheet.create({
-  settingsWrapper: {
-    position: "absolute",
-    top: 64,
-    right: 24,
-  },
   titleWrapper: {
     marginLeft: 24,
     marginRight: 24,

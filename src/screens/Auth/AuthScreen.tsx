@@ -1,6 +1,7 @@
 import { FC, useState } from "react";
 import { StyleSheet, SafeAreaView, View, Alert, TextInput } from "react-native";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "../../redux/store";
 import { setIncomeValue } from "../../redux/incomeSlice";
 import { useNavigation } from "@react-navigation/native";
 import { type StackNavigation } from "../../../App";
@@ -11,6 +12,7 @@ import Button from "../../components/Buttons/Button/Button";
 
 const AuthScreen: FC = () => {
   const navigation = useNavigation<StackNavigation>();
+  const darkMode = useSelector(({ darkTheme }: RootState) => darkTheme);
   const [inputValue, setInputValue] = useState("");
   const dispatch = useDispatch();
 
@@ -25,7 +27,7 @@ const AuthScreen: FC = () => {
 
   const handleAnnualIncome = () => {
     if (inputValue === "") {
-      Alert.alert("Annual Income", "Please provide your annual income", [{ text: "OK" }]);
+      Alert.alert("Annual Income", "Please provide your annual income.", [{ text: "OK" }]);
     } else {
       updateIncomeValue(inputValue);
     }
@@ -33,7 +35,7 @@ const AuthScreen: FC = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <MainTitle text="To start, enter your annual income" />
+      <MainTitle darkMode={darkMode.value} text="To start, enter your annual income" />
       <TextInput
         style={styles.input}
         placeholder="50000"
@@ -43,6 +45,7 @@ const AuthScreen: FC = () => {
       />
       <View style={localStyles.buttonWrapper}>
         <Button
+          darkMode={darkMode.value}
           text="Start working"
           imageSource={require("../../../assets/icons/start/start.png")}
           customFunc={handleAnnualIncome}
