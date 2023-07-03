@@ -1,9 +1,9 @@
 import { FC, useEffect, useState, useRef, MutableRefObject } from "react";
-import { AppState, StyleSheet, SafeAreaView, View, Text } from "react-native";
+import { AppState, AppStateStatus, StyleSheet, SafeAreaView, View } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../redux/store";
 import { setStartTimerValue } from "../../redux/startTimerSlice";
-import { formatIncome, formatDuration } from "../../utils/Timer";
+import { startTimer as startTimerUtils, formatIncome, formatDuration } from "../../utils/Timer";
 import { useNavigation } from "@react-navigation/native";
 import { type StackNavigation } from "../../../App";
 import styles from "../../styles/index";
@@ -22,7 +22,7 @@ const TimerScreen: FC = () => {
   const navigation = useNavigation<StackNavigation>();
 
   // References
-  const appState = useRef(AppState.currentState);
+  const appState = useRef<AppStateStatus>(AppState.currentState);
   const intervalRef: MutableRefObject<number | null> = useRef<number | null>(null);
   // State variables
   const [incomePerSecond, setIncomePerSecond] = useState<number>(0);
@@ -36,10 +36,7 @@ const TimerScreen: FC = () => {
   };
 
   useEffect(() => {
-    // Check if it's the first start
-    if (startTimer.value === 0) {
-      dispatch(setStartTimerValue(Date.now()));
-    }
+    startTimerUtils(startTimer.value);
 
     // Attribute the income to incomePerSecond
     setIncomePerSecond(formatIncome(income.value));
@@ -48,13 +45,17 @@ const TimerScreen: FC = () => {
     if (!isPaused) {
       // App state change event listener
       const subscription = AppState.addEventListener("change", (nextAppState) => {
+        console.log("AppState updating...");
         if (appState.current.match(/active/) && (nextAppState === "inactive" || nextAppState === "background")) {
+          console.log("AppState will be inactive or background");
           // App is active and will be inactive or background
           const currentDate = Date.now();
           setBackgroundStartTimer(currentDate);
+          console.log("backgroundStartTimer is updated to: " + backgroundStartTimer);
         } else if (appState.current.match(/background|inactive/) && nextAppState === "active") {
           // App is background and will be active
           const backgroundDurationInSeconds = (Date.now() - backgroundStartTimer) / 1000;
+          console.log(backgroundDurationInSeconds + "s in background");
           setDuration((prevDuration) => prevDuration + backgroundDurationInSeconds);
           setEarned((prevEarned) => prevEarned + incomePerSecond * backgroundDurationInSeconds);
           setBackgroundStartTimer(0);
@@ -68,21 +69,6 @@ const TimerScreen: FC = () => {
       };
     }
   }, [backgroundStartTimer]);
-
-  // To pause the timer, interval is cleared
-  const pauseTimer = () => {
-    setIsPaused(true);
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-    }
-  };
-
-  // Reset keep isPaused status
-  const resetTimer = () => {
-    setDuration(0);
-    setEarned(0);
-    dispatch(setStartTimerValue(Date.now()));
-  };
 
   useEffect(() => {
     // Run the timer (update duration and earned) when isPaused is false
@@ -99,6 +85,22 @@ const TimerScreen: FC = () => {
       }
     };
   }, [isPaused, incomePerSecond]);
+
+  // To pause the timer, interval is cleared
+  const pauseTimer = () => {
+    setIsPaused(true);
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+    }
+  };
+
+  // Reset keep isPaused status
+  const resetTimer = () => {
+    setIsPaused(false);
+    setDuration(0);
+    setEarned(0);
+    dispatch(setStartTimerValue(Date.now()));
+  };
 
   return (
     <SafeAreaView
@@ -130,6 +132,7 @@ const TimerScreen: FC = () => {
       </View>
       <View style={localStyles.buttonsWrapper}>
         {isPaused ? (
+          // <TimerButton darkMode={darkMode.value} isPaused={isPaused} customFunc={() => setIsPaused(false)} />
           <Button
             darkMode={darkMode.value}
             text="Resume"
